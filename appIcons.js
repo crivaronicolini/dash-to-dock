@@ -53,6 +53,7 @@ const clickAction = Object.freeze({
     MINIMIZE: 1,
     LAUNCH: 2,
     CYCLE_WINDOWS: 3,
+<<<<<<< HEAD
     MINIMIZE_OR_OVERVIEW: 4,
     PREVIEWS: 5,
     MINIMIZE_OR_PREVIEWS: 6,
@@ -62,6 +63,16 @@ const clickAction = Object.freeze({
     FOCUS_MINIMIZE_OR_APP_SPREAD: 10,
     QUIT: 11,
 });
+=======
+    CYCLE_MINIMIZE: 4,
+    MINIMIZE_OR_OVERVIEW: 5,
+    PREVIEWS: 6,
+    MINIMIZE_OR_PREVIEWS: 7,
+    FOCUS_OR_PREVIEWS: 8,
+    FOCUS_MINIMIZE_OR_PREVIEWS: 9,
+    QUIT: 10
+};
+>>>>>>> 0fef424 (Cycle + minimize option)
 
 const scrollAction = Object.freeze({
     DO_NOTHING: 0,
@@ -567,6 +578,20 @@ var DockAbstractAppIcon = GObject.registerClass({
                     this.app.activate();
                 break;
 
+            case clickAction.CYCLE_MINIMIZE:
+                if (!Main.overview.visible) {
+                    if (!this.focused) {
+                        recentlyClickedApp = this.app;
+                        recentlyClickedAppWindows = windows;
+                        recentlyClickedAppMonitor = this.monitorIndex;
+                        recentlyClickedAppIndex = -1;
+                    }
+                    this._cycleThroughWindows(false, true);
+                } else 
+                    this.app.activate();
+                break;
+                
+
             case clickAction.FOCUS_OR_PREVIEWS:
                 if (this.focused && !hasUrgentWindows &&
                     (windows.length > 1 || modifiers || button != 1)) {
@@ -828,15 +853,12 @@ var DockAbstractAppIcon = GObject.registerClass({
         windows.forEach(w => w.delete(time));
     }
 
-    _cycleThroughWindows(reversed) {
+    _cycleThroughWindows(reversed, minimize) {
         // Store for a little amount of time last clicked app and its windows
         // since the order changes upon window interaction
         let MEMORY_TIME=3000;
 
         let app_windows = this.getInterestingWindows();
-
-        if (app_windows.length <1)
-            return
 
         if (recentlyClickedAppLoopId > 0)
             GLib.source_remove(recentlyClickedAppLoopId);
@@ -853,7 +875,7 @@ var DockAbstractAppIcon = GObject.registerClass({
             recentlyClickedApp = this.app;
             recentlyClickedAppWindows = app_windows;
             recentlyClickedAppMonitor = this.monitorIndex;
-            recentlyClickedAppIndex = 0;
+            recentlyClickedAppIndex = reversed ? 0 : -1;
         }
 
         if (reversed) {
@@ -862,10 +884,21 @@ var DockAbstractAppIcon = GObject.registerClass({
         } else {
             recentlyClickedAppIndex++;
         }
-        let index = recentlyClickedAppIndex % recentlyClickedAppWindows.length;
-        let window = recentlyClickedAppWindows[index];
+        let index = 0;
+        if (app_windows.length >0){
+            index = recentlyClickedAppIndex % recentlyClickedAppWindows.length;
+        } else {
+            recentlyClickedAppIndex = -1;
+        }
 
-        Main.activateWindow(window);
+        if (minimize && recentlyClickedAppIndex !== 0 && index === 0) {
+            recentlyClickedAppWindows.forEach(function (w) { w.minimize(); });
+            recentlyClickedAppIndex = -1;
+        } else {
+            let window = recentlyClickedAppWindows[index];
+
+            Main.activateWindow(window);
+        }
     }
 
     _resetRecentlyClickedApp() {

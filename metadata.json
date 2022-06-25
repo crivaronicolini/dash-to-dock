@@ -11,5 +11,9 @@
 "original-author": "micxgx@gmail.com",
 "url": "https://micheleg.github.io/dash-to-dock/",
 "gettext-domain": "dashtodock",
+<<<<<<< HEAD
 "version": 74
+=======
+"version": 73
+>>>>>>> 0fef424 (Cycle + minimize option)
 }
