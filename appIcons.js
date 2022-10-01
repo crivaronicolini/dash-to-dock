@@ -60,7 +60,7 @@ const clickAction = Object.freeze({
     FOCUS_OR_PREVIEWS: 8,
     FOCUS_MINIMIZE_OR_PREVIEWS: 9,
     QUIT: 10
-};
+});
 
 const scrollAction = Object.freeze({
     DO_NOTHING: 0,
