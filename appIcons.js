@@ -53,17 +53,6 @@ const clickAction = Object.freeze({
     MINIMIZE: 1,
     LAUNCH: 2,
     CYCLE_WINDOWS: 3,
-<<<<<<< HEAD
-    MINIMIZE_OR_OVERVIEW: 4,
-    PREVIEWS: 5,
-    MINIMIZE_OR_PREVIEWS: 6,
-    FOCUS_OR_PREVIEWS: 7,
-    FOCUS_OR_APP_SPREAD: 8,
-    FOCUS_MINIMIZE_OR_PREVIEWS: 9,
-    FOCUS_MINIMIZE_OR_APP_SPREAD: 10,
-    QUIT: 11,
-});
-=======
     CYCLE_MINIMIZE: 4,
     MINIMIZE_OR_OVERVIEW: 5,
     PREVIEWS: 6,
@@ -72,7 +61,6 @@ const clickAction = Object.freeze({
     FOCUS_MINIMIZE_OR_PREVIEWS: 9,
     QUIT: 10
 };
->>>>>>> 0fef424 (Cycle + minimize option)
 
 const scrollAction = Object.freeze({
     DO_NOTHING: 0,
